@@ -33,6 +33,9 @@ const defaultOptions = {
   headerStyle: {
     backgroundColor: Platform.OS == 'android' ? Colors.primaryColor : 'white',
   },
+  headerTitleStyle: {
+    fontFamily: 'open-sans-bold',
+  },
   headerTintColor: Platform.OS === 'android' ? '#fff' : Colors.primaryColor,
 };
 
@@ -46,7 +49,14 @@ function Home() {
         name="Categories"
         component={CategoriesScreen}
         options={{
-          title:'Categories Screen'
+          title: 'Meal Categories',
+          headerLeft: () => {
+            return (
+              <CustomHeaderButtons>
+                <Item title="menu" iconName="ios-menu" />
+              </CustomHeaderButtons>
+            );
+          },
         }}
       />
       <Stack.Screen
@@ -114,10 +124,10 @@ function Root() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-defaultOptions,
+        defaultOptions,
         tabBarIcon: ({ focused }) => {
           let iconName;
-          if (route.name === 'MainScreen') {
+          if (route.name === 'Meals') {
             iconName = focused ? 'restaurant' : 'restaurant-outline';
           } else if (route.name === 'Favs') {
             iconName = focused ? 'ios-star' : 'ios-star-outline';
@@ -134,9 +144,11 @@ defaultOptions,
         tabBarInactiveTintColor: 'grey',
       })}>
       <Tab.Screen
-        name="MainScreen"
+        name="Meals"
         component={Home}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
       />
       <Tab.Screen
         name="Favs"
@@ -176,12 +188,31 @@ export default function App() {
   }
   return (
     <NavigationContainer onLayout={onLayoutRootView} style={styles.container}>
-      <Drawer.Navigator
-        useLegacyImplementation
-        initialRouteName="MainApp"
-        >
-        <Drawer.Screen name="MainApp" component={Root} options={{headerShown:false}} />
-        <Drawer.Screen name="Filters" component={FiltersScreen} />
+      <Drawer.Navigator useLegacyImplementation initialRouteName="Home">
+        <Drawer.Screen
+          name="Home"
+          component={Root}
+          options={{ headerShown: false }}
+        />
+        <Drawer.Screen
+          name="Filters"
+          component={FiltersScreen}
+          options={({navigation}) => ({
+            ...defaultOptions,
+            title: 'Filters',
+            headerRight: () => {
+              return (
+                <CustomHeaderButtons>
+                  <Item
+                    title="save"
+                    iconName="ios-save"
+                    onPress={navigation.save}
+                  />
+                </CustomHeaderButtons>
+              );
+            },
+          })}
+        />
       </Drawer.Navigator>
     </NavigationContainer>
   );
