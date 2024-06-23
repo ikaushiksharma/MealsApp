@@ -1,7 +1,7 @@
-import React from 'react';
-import { Text, View, StyleSheet, ScrollView, Image } from 'react-native';
-import { MEALS } from '../data/dummy-data';
-import DefaultText from '../components/DefaultText';
+import React from "react";
+import { Text, View, StyleSheet, ScrollView, Image } from "react-native";
+import { MEALS } from "../data/dummy-data";
+import DefaultText from "../components/DefaultText";
 
 const Li = (props) => {
   return (
@@ -35,26 +35,26 @@ const MealDetailsScreen = (props) => {
 
 const styles = StyleSheet.create({
   image: {
-    width: '100%',
+    width: "100%",
     height: 200,
   },
   details: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 15,
-    justifyContent: 'space-around',
+    justifyContent: "space-around",
   },
   title: {
-    fontFamily: 'open-sans-bold',
+    fontFamily: "open-sans-bold",
     fontSize: 22,
-    textAlign: 'center',
+    textAlign: "center",
   },
-  listItem:{
-    marginVertical:10,
-    marginHorizontal:20,
-    borderColor:'#ccc',
-    borderWidth:1,
-    padding:10
-  }
+  listItem: {
+    marginVertical: 10,
+    marginHorizontal: 20,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    padding: 10,
+  },
 });
 
 export default MealDetailsScreen;

@@ -1,228 +1,99 @@
-// External Exports
-import 'react-native-reanimated';
-import { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, Platform } from 'react-native';
-import * as Font from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import { Ionicons } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Item } from 'react-navigation-header-buttons';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Button } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Ionicons } from "@expo/vector-icons";
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
 
-//Internal Exports
-import CategoriesScreen from './screens/CategoriesScreen';
-import CategoryMealsScreen from './screens/CategoryMealsScreen';
-import MealDetailsScreen from './screens/MealDetailsScreen';
-import FavoriteScreen from './screens/FavoriteScreen';
-import FiltersScreen from './screens/FiltersScreen';
-import Colors from './constants/Colors';
-import { CustomHeaderButtons } from './components/HeaderButton';
+import CategoriesScreen from "./screens/CategoriesScreen";
+import MealsOverviewScreen from "./screens/MealsOverviewScreen";
+import MealDetailsScreen from "./screens/MealDetailsScreen";
+import FavoritesScreen from "./screens/FavoriteScreen";
+import { useCallback } from "react";
 
-// Initializations
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
-SplashScreen.preventAutoHideAsync();
-global.__reanimatedWorkletInit = () => {};
 
-// Default Options for stack navigation
-const defaultOptions = {
-  title: 'Meals',
-  headerStyle: {
-    backgroundColor: Platform.OS == 'android' ? Colors.primaryColor : 'white',
-  },
-  headerTitleStyle: {
-    fontFamily: 'open-sans-bold',
-  },
-  headerTintColor: Platform.OS === 'android' ? '#fff' : Colors.primaryColor,
-};
-
-// Main Stack
-function Home() {
+function DrawerNavigator() {
   return (
-    <Stack.Navigator
-      initialRouteName="Categories"
-      screenOptions={defaultOptions}>
-      <Stack.Screen
+    <Drawer.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: "#351401" },
+        headerTintColor: "white",
+        sceneContainerStyle: { backgroundColor: "#3f2f25" },
+        drawerContentStyle: { backgroundColor: "#351401" },
+        drawerInactiveTintColor: "white",
+        drawerActiveTintColor: "#351401",
+        drawerActiveBackgroundColor: "#e4baa1",
+      }}
+    >
+      <Drawer.Screen
         name="Categories"
         component={CategoriesScreen}
         options={{
-          title: 'Meal Categories',
-          headerLeft: () => {
-            return (
-              <CustomHeaderButtons>
-                <Item title="menu" iconName="ios-menu" />
-              </CustomHeaderButtons>
-            );
-          },
+          title: "All Categories",
+          drawerIcon: ({ color, size }) => <Ionicons name="list" color={color} size={size} />,
         }}
       />
-      <Stack.Screen
-        name="CategoryMeals"
-        component={CategoryMealsScreen}
-        options={({ route }) => ({ title: route.params.title })}
-      />
-      <Stack.Screen
-        name="MealDetails"
-        component={MealDetailsScreen}
-        options={({ route }) => ({
-          title: route.params.title,
-          headerRight: () => {
-            return (
-              <CustomHeaderButtons>
-                <Item
-                  title="favorite"
-                  iconName="ios-star"
-                  onPress={() => console.log('marked as fav')}
-                />
-              </CustomHeaderButtons>
-            );
-          },
-        })}
-      />
-    </Stack.Navigator>
-  );
-}
-
-// Favoirte Stack
-function Favorites() {
-  return (
-    <Stack.Navigator
-      initialRouteName="Favorites"
-      screenOptions={defaultOptions}>
-      <Stack.Screen
+      <Drawer.Screen
         name="Favorites"
-        component={FavoriteScreen}
-        options={{ headerTitle: 'Your Favorite Meals' }}
-      />
-      <Stack.Screen
-        name="MealDetails"
-        component={MealDetailsScreen}
-        options={({ route }) => ({
-          title: route.params.title,
-          headerRight: () => {
-            return (
-              <CustomHeaderButtons>
-                <Item
-                  title="favorite"
-                  iconName="ios-star"
-                  onPress={() => console.log('marked as fav')}
-                />
-              </CustomHeaderButtons>
-            );
-          },
-        })}
-      />
-    </Stack.Navigator>
-  );
-}
-
-// ROOT
-function Root() {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        defaultOptions,
-        tabBarIcon: ({ focused }) => {
-          let iconName;
-          if (route.name === 'Meals') {
-            iconName = focused ? 'restaurant' : 'restaurant-outline';
-          } else if (route.name === 'Favs') {
-            iconName = focused ? 'ios-star' : 'ios-star-outline';
-          }
-          return (
-            <Ionicons
-              name={iconName}
-              size={23}
-              color={focused ? Colors.accentColor : 'grey'}
-            />
-          );
-        },
-        tabBarActiveTintColor: Colors.accentColor,
-        tabBarInactiveTintColor: 'grey',
-      })}>
-      <Tab.Screen
-        name="Meals"
-        component={Home}
+        component={FavoritesScreen}
         options={{
-          headerShown: false,
+          drawerIcon: ({ color, size }) => <Ionicons name="star" color={color} size={size} />,
         }}
       />
-      <Tab.Screen
-        name="Favs"
-        component={Favorites}
-        options={{ headerShown: false }}
-      />
-    </Tab.Navigator>
+    </Drawer.Navigator>
   );
 }
 
-// APP FUNCTION
 export default function App() {
-  const [dataLoaded, setDataLoaded] = useState(false);
-  useEffect(() => {
-    async function prepare() {
-      try {
-        await Font.loadAsync({
-          'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-          'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
-        });
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        setDataLoaded(true);
-      }
-    }
-    prepare();
-  }, []);
+  const [fontsLoaded] = useFonts({
+    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+  });
   const onLayoutRootView = useCallback(async () => {
-    if (dataLoaded) {
+    if (fontsLoaded) {
       await SplashScreen.hideAsync();
     }
-  }, [dataLoaded]);
+  }, [fontsLoaded]);
 
-  if (!dataLoaded) {
+  if (!fontsLoaded) {
     return null;
   }
   return (
-    <NavigationContainer onLayout={onLayoutRootView} style={styles.container}>
-      <Drawer.Navigator useLegacyImplementation initialRouteName="Home">
-        <Drawer.Screen
-          name="Home"
-          component={Root}
-          options={{ headerShown: false }}
-        />
-        <Drawer.Screen
-          name="Filters"
-          component={FiltersScreen}
-          options={({navigation}) => ({
-            ...defaultOptions,
-            title: 'Filters',
-            headerRight: () => {
-              return (
-                <CustomHeaderButtons>
-                  <Item
-                    title="save"
-                    iconName="ios-save"
-                    onPress={navigation.save}
-                  />
-                </CustomHeaderButtons>
-              );
-            },
-          })}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <>
+      <StatusBar style="light" />
+      <NavigationContainer onReady={onLayoutRootView}>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: { backgroundColor: "#351401" },
+            headerTintColor: "white",
+            contentStyle: { backgroundColor: "#3f2f25" },
+          }}
+        >
+          <Stack.Screen
+            name="Drawer"
+            component={DrawerNavigator}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="MealsOverview" component={MealsOverviewScreen} />
+          <Stack.Screen
+            name="MealDetails"
+            component={MealDetailsScreen}
+            options={{
+              title: "About the Meal",
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  container: {},
 });

@@ -1,6 +1,6 @@
-import React, { useState, useEffect,useCallback } from 'react';
-import { Text, View, StyleSheet, Switch } from 'react-native';
-import Colors from '../constants/Colors';
+import React, { useState, useEffect, useCallback } from "react";
+import { Text, View, StyleSheet, Switch } from "react-native";
+import Colors from "../constants/Colors";
 
 const FiltersSwitch = (props) => {
   return (
@@ -17,7 +17,7 @@ const FiltersSwitch = (props) => {
 };
 
 const FiltersScreen = (props) => {
-  const {navigation}=props;
+  const { navigation } = props;
   const [isGlutenFree, setIsGlutenFree] = useState(false);
   const [isLactoseFree, setIsLactoseFree] = useState(false);
   const [isVegan, setIsVegan] = useState(false);
@@ -30,10 +30,10 @@ const FiltersScreen = (props) => {
       vegetarian: isVegetarian,
     };
     console.log(appliedFilters);
-  },[isVegetarian,isGlutenFree,isLactoseFree,isVegan]);
+  }, [isVegetarian, isGlutenFree, isLactoseFree, isVegan]);
   useEffect(() => {
     navigation.setParams({ save: saveFilters });
-  },[saveFilters]);
+  }, [saveFilters]);
   return (
     <View style={styles.screen}>
       <Text style={styles.title}>Available Filters</Text>
@@ -47,11 +47,7 @@ const FiltersScreen = (props) => {
         state={isLactoseFree}
         onChange={(newVal) => setIsLactoseFree(newVal)}
       />
-      <FiltersSwitch
-        label="Vegan"
-        state={isVegan}
-        onChange={(newVal) => setIsVegan(newVal)}
-      />
+      <FiltersSwitch label="Vegan" state={isVegan} onChange={(newVal) => setIsVegan(newVal)} />
       <FiltersSwitch
         label="Vegetarian"
         state={isVegetarian}
@@ -64,19 +60,19 @@ const FiltersScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
-    fontFamily: 'open-sans-bold',
+    fontFamily: "open-sans-bold",
     fontSize: 22,
     margin: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '80%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "80%",
     marginVertical: 10,
   },
 });

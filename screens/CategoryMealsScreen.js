@@ -1,7 +1,7 @@
-import React from 'react';
-import { Text, View, StyleSheet, FlatList } from 'react-native';
-import { CATEGORIES, MEALS } from '../data/dummy-data';
-import MealItem from '../components/MealItem';
+import React from "react";
+import { Text, View, StyleSheet, FlatList } from "react-native";
+import { CATEGORIES, MEALS } from "../data/dummy-data";
+import MealItem from "../components/MealItem";
 const CategoryMealsScreen = (props) => {
   const { itemId } = props.route.params;
   const renderMealItem = (itemData) => {
@@ -13,7 +13,7 @@ const CategoryMealsScreen = (props) => {
         affordability={itemData.item.affordability}
         img={itemData.item.imageUrl}
         onSelectMeal={() => {
-          props.navigation.navigate('MealDetails', {
+          props.navigation.navigate("MealDetails", {
             title: itemData.item.title,
             mealId: itemData.item.id,
           });
@@ -21,16 +21,10 @@ const CategoryMealsScreen = (props) => {
       />
     );
   };
-  const displayedMeals = MEALS.filter(
-    (meal) => meal.categoryIds.indexOf(itemId) >= 0
-  );
+  const displayedMeals = MEALS.filter((meal) => meal.categoryIds.indexOf(itemId) >= 0);
   return (
     <View style={styles.screen}>
-      <FlatList
-        data={displayedMeals}
-        renderItem={renderMealItem}
-        style={{ width: '100%' }}
-      />
+      <FlatList data={displayedMeals} renderItem={renderMealItem} style={{ width: "100%" }} />
     </View>
   );
 };
@@ -38,8 +32,8 @@ const CategoryMealsScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 15,
   },
 });
