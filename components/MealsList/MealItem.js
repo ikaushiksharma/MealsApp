@@ -7,7 +7,7 @@ function MealItem({ id, title, imageUrl, duration, complexity, affordability }) 
   const navigation = useNavigation();
 
   function selectMealItemHandler() {
-    navigation.navigate("MealDetail", {
+    navigation.navigate("MealDetails", {
       mealId: id,
     });
   }

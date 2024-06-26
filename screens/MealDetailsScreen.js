@@ -16,7 +16,7 @@ const Li = (props) => {
     </View>
   );
 };
-const MealDetailsScreen = (props) => {
+const MealDetailsScreen = ({ route, navigation }) => {
   const favoriteMealIds = useSelector((state) => state.favoriteMeals.ids);
   const dispatch = useDispatch();
 

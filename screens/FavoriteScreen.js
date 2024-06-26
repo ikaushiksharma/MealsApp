@@ -2,6 +2,7 @@ import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import MealsList from "../components/MealsList/MealsList";
 import { MEALS } from "../data/dummy-data";
+import { useSelector } from "react-redux";
 const FavoriteScreen = (props) => {
   const favoriteMealIds = useSelector((state) => state.favoriteMeals.ids);
 

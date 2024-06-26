@@ -15,7 +15,7 @@ function CategoriesScreen({ navigation }) {
       <CategoryGridTile
         title={itemData.item.title}
         color={itemData.item.color}
-        onSelect={pressHandler}
+        onPress={pressHandler}
       />
     );
   }

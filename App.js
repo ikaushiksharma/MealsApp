@@ -13,6 +13,7 @@ import MealsOverviewScreen from "./screens/MealsOverviewScreen";
 import MealDetailsScreen from "./screens/MealDetailsScreen";
 import FavoritesScreen from "./screens/FavoriteScreen";
 import { store } from "./store/redux/store";
+import { Provider } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
