@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { Text, View, StyleSheet, ScrollView, Image } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+
+import IconButton from "../components/IconButton";
+import List from "../components/MealDetail/List";
+import Subtitle from "../components/MealDetail/Subtitle";
+import MealDetails from "../components/MealDetails";
 import { MEALS } from "../data/dummy-data";
-import DefaultText from "../components/DefaultText";
+import { addFavorite, removeFavorite } from "../store/redux/favorites";
 
 const Li = (props) => {
   return (
@@ -11,49 +17,80 @@ const Li = (props) => {
   );
 };
 const MealDetailsScreen = (props) => {
-  const { mealId } = props.route.params;
-  const mealData = MEALS.find((item) => item.id == mealId);
+  const favoriteMealIds = useSelector((state) => state.favoriteMeals.ids);
+  const dispatch = useDispatch();
+
+  const mealId = route.params.mealId;
+  const selectedMeal = MEALS.find((meal) => meal.id === mealId);
+
+  const mealIsFavorite = favoriteMealIds.includes(mealId);
+
+  function changeFavoriteStatusHandler() {
+    if (mealIsFavorite) {
+      dispatch(removeFavorite({ id: mealId }));
+    } else {
+      dispatch(addFavorite({ id: mealId }));
+    }
+  }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <IconButton
+            icon={mealIsFavorite ? "star" : "star-outline"}
+            color="white"
+            onPress={changeFavoriteStatusHandler}
+          />
+        );
+      },
+    });
+  }, [navigation, changeFavoriteStatusHandler]);
+
   return (
-    <ScrollView>
-      <Image source={{ uri: mealData.imageUrl }} style={styles.image} />
-      <View style={styles.details}>
-        <DefaultText>{mealData.duration}m</DefaultText>
-        <DefaultText>{mealData.complexity.toUpperCase()}</DefaultText>
-        <DefaultText>{mealData.affordability.toUpperCase()}</DefaultText>
+    <ScrollView style={styles.rootContainer}>
+      <Image style={styles.image} source={{ uri: selectedMeal.imageUrl }} />
+      <Text style={styles.title}>{selectedMeal.title}</Text>
+      <MealDetails
+        duration={selectedMeal.duration}
+        complexity={selectedMeal.complexity}
+        affordability={selectedMeal.affordability}
+        textStyle={styles.detailText}
+      />
+      <View style={styles.listOuterContainer}>
+        <View style={styles.listContainer}>
+          <Subtitle>Ingredients</Subtitle>
+          <List data={selectedMeal.ingredients} />
+          <Subtitle>Steps</Subtitle>
+          <List data={selectedMeal.steps} />
+        </View>
       </View>
-      <Text style={styles.title}>ingredients</Text>
-      {mealData.ingredients.map((ing, i) => (
-        <Li key={i}>{ing}</Li>
-      ))}
-      <Text style={styles.title}>Steps</Text>
-      {mealData.steps.map((step, i) => (
-        <Li key={i}>{step}</Li>
-      ))}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  rootContainer: {
+    marginBottom: 32,
+  },
   image: {
     width: "100%",
-    height: 200,
-  },
-  details: {
-    flexDirection: "row",
-    padding: 15,
-    justifyContent: "space-around",
+    height: 350,
   },
   title: {
-    fontFamily: "open-sans-bold",
-    fontSize: 22,
+    fontWeight: "bold",
+    fontSize: 24,
+    margin: 8,
     textAlign: "center",
+    color: "white",
   },
-  listItem: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    padding: 10,
+  detailText: {
+    color: "white",
+  },
+  listOuterContainer: {
+    alignItems: "center",
+  },
+  listContainer: {
+    width: "80%",
   },
 });
 

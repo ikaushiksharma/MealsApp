@@ -1,39 +1,33 @@
 import React from "react";
-import { Text, View, StyleSheet, FlatList } from "react-native";
-import MealItem from "../components/MealItem";
+import { Text, View, StyleSheet } from "react-native";
+import MealsList from "../components/MealsList/MealsList";
 import { MEALS } from "../data/dummy-data";
 const FavoriteScreen = (props) => {
-  const renderMealItem = (itemData) => {
+  const favoriteMealIds = useSelector((state) => state.favoriteMeals.ids);
+
+  const favoriteMeals = MEALS.filter((meal) => favoriteMealIds.includes(meal.id));
+
+  if (favoriteMeals.length === 0) {
     return (
-      <MealItem
-        title={itemData.item.title}
-        duration={itemData.item.duration}
-        complexity={itemData.item.complexity}
-        affordability={itemData.item.affordability}
-        img={itemData.item.imageUrl}
-        onSelectMeal={() => {
-          props.navigation.navigate("MealDetails", {
-            title: itemData.item.title,
-            mealId: itemData.item.id,
-          });
-        }}
-      />
+      <View style={styles.rootContainer}>
+        <Text style={styles.text}>You have no favorite meals yet.</Text>
+      </View>
     );
-  };
-  const displayedMeals = MEALS.filter((meal) => meal.id == "m1" || meal.id == "m2");
-  return (
-    <View style={styles.screen}>
-      <FlatList data={displayedMeals} renderItem={renderMealItem} style={{ width: "100%" }} />
-    </View>
-  );
+  }
+
+  return <MealsList items={favoriteMeals} />;
 };
 
 const styles = StyleSheet.create({
-  screen: {
+  rootContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 15,
+  },
+  text: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
   },
 });
 
